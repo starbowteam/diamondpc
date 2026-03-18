@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DIAMOND AI — Desktop</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked-katex-extension@5.0.0/lib/index.umd.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Блокер для мобильных устройств -->
+  <div class="mobile-blocker" id="mobileBlocker">
+    <div class="blocker-content">
+      <i class="fas fa-desktop"></i>
+      <h2>ПК-версия</h2>
+      <p>Этот сайт оптимизирован для компьютеров.<br>Пожалуйста, откройте его на десктопе.</p>
+    </div>
+  </div>
+
+  <!-- Основное приложение (скрыто на мобилках) -->
+  <div class="app" id="app">
+    <!-- Загрузочный экран -->
+    <div class="welcome-screen" id="welcomeScreen">
+      <div class="welcome-content">
+        <img src="logotip.png" class="welcome-logo" alt="logo"
+             onerror="this.src='https://via.placeholder.com/100x100/1e1e1e/ffffff?text=AI'; this.style.borderRadius='50%';">
+        <div class="welcome-title">DIAMOND</div>
+        <div class="loading-status" id="loadingStatus">Загрузка</div>
+        <div class="loading-bar-container">
+          <div class="loading-bar" id="loadingBar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Экран ошибки (ключ невалидный) -->
+    <div class="error-screen" id="errorScreen" style="display: none;">
+      <div class="error-content">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h1>Ох, незадача!</h1>
+        <p>Ключ ИИ истек, ожидайте поставления нового.</p>
+        <p class="error-hint">Попробуйте зайти позже или напишите в поддержку.</p>
+      </div>
+    </div>
+
+    <!-- Основной интерфейс чата -->
+    <div class="main-ui" id="mainUI" style="display: none;">
+      <header class="desktop-header">
+        <button class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Свернуть/развернуть">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="header-logo">
+          <img src="avatark.png" alt="avatar"
+               onerror="this.src='https://via.placeholder.com/32x32/1e1e1e/ffffff?text=AI'; this.style.borderRadius='50%';">
+          <span>DIAMOND AI</span>
+        </div>
+        <div class="header-right"></div>
+      </header>
+
+      <div class="app-container">
+        <aside class="sidebar desktop-sidebar" id="sidebar">
+          <div class="sidebar-header">
+            <button class="new-chat-btn" id="newChatBtn">
+              <i class="fas fa-plus"></i> <span>Новый чат</span>
+            </button>
+            <div class="search-box">
+              <i class="fas fa-search"></i>
+              <input type="text" id="historySearch" placeholder="Поиск...">
+            </div>
+          </div>
+          <div class="history-list" id="historyList"></div>
+          <div class="sidebar-footer">
+            <button class="sidebar-footer-btn" id="discordBtn" title="Discord"><i class="fab fa-discord"></i></button>
+            <button class="sidebar-footer-btn" id="telegramBtn" title="Telegram"><i class="fab fa-telegram"></i></button>
+            <button class="sidebar-footer-btn" id="avatarBtn" title="Аватар"><i class="fas fa-user-circle"></i></button>
+          </div>
+        </aside>
+
+        <main class="chat-area" id="chatArea">
+          <div class="messages-container" id="messagesContainer"></div>
+          <div class="input-area">
+            <div class="input-wrapper">
+              <textarea id="userInput" placeholder="Сообщение..." rows="1"></textarea>
+              <button class="send-btn" id="sendBtn" disabled>
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Модалка аватара -->
+    <div id="avatarModal" class="avatar-modal" style="display: none;">
+      <div class="avatar-modal-content">
+        <div class="avatar-modal-header">
+          <h3>Выберите аватар</h3>
+          <button class="close-modal" id="closeAvatarModal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="avatar-icons">
+          <div class="avatar-icon" data-icon="fa-robot"><i class="fas fa-robot"></i></div>
+          <div class="avatar-icon" data-icon="fa-user"><i class="fas fa-user"></i></div>
+          <div class="avatar-icon" data-icon="fa-star"><i class="fas fa-star"></i></div>
+          <div class="avatar-icon" data-icon="fa-heart"><i class="fas fa-heart"></i></div>
+          <div class="avatar-icon" data-icon="fa-fire"><i class="fas fa-fire"></i></div>
+          <div class="avatar-icon" data-icon="fa-crown"><i class="fas fa-crown"></i></div>
+        </div>
+        <div class="avatar-upload">
+          <button id="uploadAvatarBtn" class="upload-btn"><i class="fas fa-upload"></i> Загрузить своё</button>
+          <button id="resetAvatarBtn" class="reset-btn"><i class="fas fa-undo"></i> Сбросить</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Контейнер для тостов -->
+    <div id="toastContainer" class="toast-container"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
