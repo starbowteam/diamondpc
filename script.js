@@ -54,8 +54,8 @@ const loadingStatuses = [
     "Загрузка нейросети...",
     "Активация кристаллов...",
     "Калибровка ответов...",
-    "Получение ответов...",
-    "Запуск нейросети..."
+    "Получение API..",
+    "Запуск Нейросети..."
 ];
 
 // ==================== НАСТРОЙКА KATEX ====================
@@ -96,10 +96,9 @@ const toastContainer = document.getElementById('toastContainer');
 const loadingStatus = document.getElementById('loadingStatus');
 const loadingBar = document.getElementById('loadingBar');
 
-// Для ПК: кнопка сворачивания сайдбара
+// Кнопка сворачивания сайдбара
 const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
 const sidebar = document.getElementById('sidebar');
-const chatArea = document.getElementById('chatArea'); // может пригодиться
 
 // ==================== ВСПОМОГАТЕЛЬНЫЕ ====================
 function getBotAvatarHTML() {
@@ -216,12 +215,21 @@ async function checkKeyBalance(apiKey) {
 (async function init() {
     log('🟢 Инициализация...');
     
-    // Загрузка чатов
+    // Загрузка чатов из localStorage
     try {
         const stored = localStorage.getItem('diamondChats');
-        chats = stored ? JSON.parse(stored) : [];
-        if (chats.length && !currentChatId) currentChatId = chats[0].id;
-    } catch { chats = []; }
+        if (stored) {
+            chats = JSON.parse(stored);
+            chats = chats.filter(chat => chat && chat.id && Array.isArray(chat.messages));
+            log(`Загружено ${chats.length} чатов`);
+        } else {
+            chats = [];
+            log('Нет сохранённых чатов');
+        }
+    } catch (e) {
+        log(`Ошибка загрузки чатов: ${e.message}`, 'ERROR');
+        chats = [];
+    }
 
     // Загрузка аватара пользователя
     try {
@@ -232,7 +240,6 @@ async function checkKeyBalance(apiKey) {
     await showLoadingScreen();
     welcomeScreen.style.display = 'none';
 
-    // Получаем ключ с твоего сервера
     const serverKey = await fetchServerKey();
     if (!serverKey) {
         log('❌ Не удалось получить ключ с сервера');
@@ -257,17 +264,18 @@ async function checkKeyBalance(apiKey) {
     mainUI.style.display = 'flex';
     setTimeout(() => mainUI.classList.add('visible'), 50);
     
-    // Создаём новый чат, если нет ни одного
-    if (chats.length === 0) {
-        createNewChat(true);
-    } else {
+    // Если есть чаты, устанавливаем текущий и рендерим их
+    if (chats.length > 0) {
+        if (!currentChatId || !chats.find(c => c.id === currentChatId)) {
+            currentChatId = chats[0].id;
+        }
         renderChat();
+        renderHistory(); // обязательно рендерим список чатов
+    } else {
+        createNewChat(true);
     }
 
-    // Обновляем состояние кнопки отправки
     updateSendButtonState();
-    
-    // Устанавливаем все обработчики
     setupEventListeners();
 })();
 
@@ -386,8 +394,22 @@ function formatTime(timestamp) {
 
 // ==================== РЕНДЕР ЧАТА ====================
 function renderChat() {
+    if (!currentChatId && chats.length > 0) {
+        currentChatId = chats[0].id;
+    }
     const chat = chats.find(c => c.id === currentChatId);
-    if (!chat) { createNewChat(true); return; }
+    if (!chat) {
+        if (chats.length > 0) {
+            currentChatId = chats[0].id;
+            renderChat();
+        } else {
+            createNewChat(true);
+        }
+        return;
+    }
+    
+    if (!messagesContainer) return;
+    
     messagesContainer.innerHTML = '';
     let lastDate = null;
     chat.messages.forEach((msg, index) => {
@@ -670,7 +692,9 @@ async function sendMessage() {
 }
 
 function scrollToBottom() {
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
 }
 function updateSendButtonState() {
     if (sendBtn) {
@@ -678,7 +702,7 @@ function updateSendButtonState() {
     }
 }
 
-// ==================== ИСТОРИЯ ====================
+// ==================== ИСТОРИЯ (СПИСОК ЧАТОВ) ====================
 function renderHistory() {
     if (!historyList) return;
     const searchTerm = historySearch ? historySearch.value.toLowerCase() : '';
@@ -720,7 +744,6 @@ if (newChatBtn) newChatBtn.addEventListener('click', () => createNewChat());
 if (sidebarToggleBtn) {
     sidebarToggleBtn.addEventListener('click', () => {
         sidebar.classList.toggle('collapsed');
-        // Меняем иконку (опционально)
         const icon = sidebarToggleBtn.querySelector('i');
         if (sidebar.classList.contains('collapsed')) {
             icon.className = 'fas fa-chevron-right';
@@ -825,12 +848,10 @@ if (sendBtn) {
     sendBtn.addEventListener('click', sendMessage);
 }
 
-// Закрытие модалки по клику вне
 window.addEventListener('click', (e) => {
     if (e.target === avatarModal) avatarModal.style.display = 'none';
 });
 
-// ==================== ВСПОМОГАТЕЛЬНЫЙ ФУНКЦИОНАЛ ====================
 function setupEventListeners() {
-    // Все обработчики уже добавлены выше
+    // Все обработчики уже установлены
 }
