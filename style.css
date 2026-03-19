@@ -175,7 +175,7 @@ body {
 }
 
 .header-left, .header-right {
-    width: 40px; /* такая же ширина, как у кнопки */
+    width: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -436,8 +436,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    max-width: 900px; /* чтобы не растягивалось на весь экран */
-    margin: 0 auto;    /* центрируем сообщения */
+    /* Убраны max-width и margin, которые могли скрывать контент */
     width: 100%;
 }
 
