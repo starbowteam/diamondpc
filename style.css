@@ -429,6 +429,7 @@ body {
     overflow: hidden;
 }
 
+/* Контейнер сообщений — на всю ширину, без ограничений */
 .messages-container {
     flex: 1;
     overflow-y: auto;
@@ -436,8 +437,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    /* Убраны max-width и margin, которые могли скрывать контент */
-    width: 100%;
+    width: 100%; /* растягиваем на всю доступную ширину */
 }
 
 .date-divider {
