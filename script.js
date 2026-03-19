@@ -54,8 +54,7 @@ const loadingStatuses = [
     "Загрузка нейросети...",
     "Активация кристаллов...",
     "Калибровка ответов...",
-    "Получение API...",
-    "Запуск нейросети..."
+    "Запуск DIAMOND AI..."
 ];
 
 // ==================== НАСТРОЙКА KATEX ====================
@@ -269,8 +268,8 @@ async function checkKeyBalance(apiKey) {
         if (!currentChatId || !chats.find(c => c.id === currentChatId)) {
             currentChatId = chats[0].id;
         }
-        renderChat();          // отображаем сообщения
-        renderHistory();       // отображаем список чатов в сайдбаре (ВАЖНО!)
+        renderChat();
+        renderHistory();
     } else {
         createNewChat(true);
     }
