@@ -13,10 +13,9 @@ body {
     color: #ffffff;
 }
 
-.app {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
+/* Мобильный блокер (скрыт на ПК) */
+.mobile-blocker {
+    display: none;
 }
 
 /* ========== ЗАГРУЗОЧНЫЙ ЭКРАН ========== */
@@ -43,7 +42,7 @@ body {
     text-align: center;
     padding: 20px;
     max-width: 300px;
-    margin-top: -10vh; /* поднято выше */
+    margin-top: -10vh;
 }
 
 .welcome-logo {
@@ -163,7 +162,7 @@ body {
     opacity: 1;
 }
 
-/* Верхняя панель для ПК */
+/* Шапка для ПК */
 .desktop-header {
     height: 56px;
     background: #2d2d2d;
@@ -173,6 +172,20 @@ body {
     padding: 0 16px;
     border-bottom: 1px solid #3a3a3a;
     flex-shrink: 0;
+}
+
+.header-left, .header-right {
+    width: 40px; /* такая же ширина, как у кнопки */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .sidebar-toggle-btn {
@@ -211,10 +224,6 @@ body {
     font-size: 18px;
 }
 
-.header-right {
-    width: 40px;
-}
-
 /* Контейнер для сайдбара и чата */
 .app-container {
     display: flex;
@@ -223,7 +232,7 @@ body {
     background: #1e1e1e;
 }
 
-/* Боковое меню (десктоп) */
+/* Боковое меню */
 .desktop-sidebar {
     width: 280px;
     background: #2d2d2d;
@@ -244,7 +253,6 @@ body {
     border-right: none;
 }
 
-/* Контент сайдбара */
 .sidebar-header {
     padding: 0 16px;
     margin-bottom: 20px;
@@ -428,6 +436,9 @@ body {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    max-width: 900px; /* чтобы не растягивалось на весь экран */
+    margin: 0 auto;    /* центрируем сообщения */
+    width: 100%;
 }
 
 .date-divider {
@@ -575,7 +586,6 @@ body {
     color: #fff;
 }
 
-/* Область ввода */
 .input-area {
     padding: 16px 24px;
     background: #2d2d2d;
@@ -641,7 +651,7 @@ textarea::placeholder {
     cursor: not-allowed;
 }
 
-/* Модалка аватара (та же) */
+/* Модалка аватара */
 .avatar-modal {
     position: fixed;
     top: 0;
@@ -830,58 +840,8 @@ textarea::placeholder {
     to { opacity: 1; transform: translateX(0); }
 }
 
-/* Стили для сворачивания сайдбара на десктопе */
-@media (max-width: 768px) {
-    /* на мобилках сайдбар скрыт, показывается бургером – это уже есть в мобильной версии */
-    .desktop-header .sidebar-toggle-btn {
-        display: none; /* на мобилках бургер будет обрабатываться отдельно */
-    }
-}
-
-/* Анимация для сайдбара */
-.desktop-sidebar {
-    transition: width 0.3s ease, opacity 0.3s ease;
-}
-
-/* ========== МОБИЛЬНЫЙ БЛОКЕР ========== */
-.mobile-blocker {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #1e1e1e;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-    text-align: center;
-    padding: 20px;
-}
-
-.mobile-blocker .blocker-content i {
-    font-size: 64px;
-    color: #aaa;
-    margin-bottom: 20px;
-}
-
-.mobile-blocker .blocker-content h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
-    color: white;
-}
-
-.mobile-blocker .blocker-content p {
-    color: #aaa;
-    line-height: 1.5;
-}
-
-/* Показываем блокер на мобильных, скрываем приложение */
-@media (max-width: 768px) {
-    .mobile-blocker {
-        display: flex;
-    }
-    .app {
-        display: none !important;
-    }
+/* Стили для сворачивания сайдбара */
+.desktop-sidebar.collapsed {
+    width: 0;
+    opacity: 0;
 }
