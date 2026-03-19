@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Блокер для мобильных устройств -->
+  <!-- Мобильный блокер (для ПК-версии он скрыт, но можно оставить) -->
   <div class="mobile-blocker" id="mobileBlocker">
     <div class="blocker-content">
       <i class="fas fa-desktop"></i>
@@ -23,14 +23,14 @@
     </div>
   </div>
 
-  <!-- Основное приложение (скрыто на мобилках) -->
+  <!-- Основное приложение -->
   <div class="app" id="app">
     <!-- Загрузочный экран -->
     <div class="welcome-screen" id="welcomeScreen">
       <div class="welcome-content">
         <img src="logotip.png" class="welcome-logo" alt="logo"
              onerror="this.src='https://via.placeholder.com/100x100/1e1e1e/ffffff?text=AI'; this.style.borderRadius='50%';">
-        <div class="welcome-title">DIAMOND</div>
+        <div class="welcome-title">DIAMOND AI</div>
         <div class="loading-status" id="loadingStatus">Загрузка</div>
         <div class="loading-bar-container">
           <div class="loading-bar" id="loadingBar"></div>
@@ -38,7 +38,7 @@
       </div>
     </div>
 
-    <!-- Экран ошибки (ключ невалидный) -->
+    <!-- Экран ошибки -->
     <div class="error-screen" id="errorScreen" style="display: none;">
       <div class="error-content">
         <i class="fas fa-exclamation-triangle"></i>
@@ -50,19 +50,26 @@
 
     <!-- Основной интерфейс чата -->
     <div class="main-ui" id="mainUI" style="display: none;">
+      <!-- Шапка с тремя колонками -->
       <header class="desktop-header">
-        <button class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Свернуть/развернуть">
-          <i class="fas fa-bars"></i>
-        </button>
-        <div class="header-logo">
-          <img src="avatark.png" alt="avatar"
-               onerror="this.src='https://via.placeholder.com/32x32/1e1e1e/ffffff?text=AI'; this.style.borderRadius='50%';">
-          <span>DIAMOND AI</span>
+        <div class="header-left">
+          <button class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Свернуть/развернуть">
+            <i class="fas fa-bars"></i>
+          </button>
         </div>
-        <div class="header-right"></div>
+        <div class="header-center">
+          <div class="header-logo">
+            <img src="avatark.png" alt="avatar"
+                 onerror="this.src='https://via.placeholder.com/32x32/1e1e1e/ffffff?text=AI'; this.style.borderRadius='50%';">
+            <span>DIAMOND AI</span>
+          </div>
+        </div>
+        <div class="header-right"></div> <!-- пустой блок для симметрии -->
       </header>
 
+      <!-- Контейнер с сайдбаром и чатом -->
       <div class="app-container">
+        <!-- Боковое меню -->
         <aside class="sidebar desktop-sidebar" id="sidebar">
           <div class="sidebar-header">
             <button class="new-chat-btn" id="newChatBtn">
@@ -81,6 +88,7 @@
           </div>
         </aside>
 
+        <!-- Область чата -->
         <main class="chat-area" id="chatArea">
           <div class="messages-container" id="messagesContainer"></div>
           <div class="input-area">
